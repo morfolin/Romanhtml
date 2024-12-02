@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anketa</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      .form-select {
+        border-width: 2px;
+      }
+      .highlight {
+        font-weight: bold; /* Жирный шрифт */
+        font-size: 1.2em; /* Увеличенный размер шрифта */
+        margin-bottom: 20px; /* Отступ снизу */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container my-5">
+      <div class="row">
+        <div class="col-lg-5 mx-auto">
+          <h5 class="highlight">
+            Рад приветствовать Вас, я Роман Ежгуров,  сертифицированный коуч 
+            по постановке целей, эффективному планированию и фокусировке на 
+            эффективные действия. Задам Вам несколько вопросов, чтобы понять -  
+            смогу ли я помочь Вам в решении Вашей задачи и как это сделать 
+            наилучшим образом. Если я понимаю, что могу решить Ваш запрос, 
+            то мы назначим время для дружеской 30 минутной беседы, на которой 
+            уже подробно поговорим о том, как Вам быстрее достичь Ваших желаемых целей. 
+          </h5>
+          <form id="mainForm" class="mb-4">
+            <h5>
+            1. Имеете ли вы представление о своей жизненной миссии или цели? 
+            </h5>
+            <textarea
+              class="form-control mb-4"
+              style="width: 100%"
+              rows="4"
+              required
+            ></textarea>
+            <h5>
+              2 Есть ли конкретные вопросы о целях, планировании, фокусировке, 
+              которые Вы бы хотели обсудить на консультации с коучем? Какие?
+            </h5>
+            <textarea
+              class="form-control mb-4"
+              style="width: 100%"
+              rows="4"
+              required
+            ></textarea>
+            <h5>
+              3 Какие аспекты вашей жизни Вас сейчас особенно интересуют? 
+              (Например, карьера, отношения, личное развитие, финансы)
+            </h5>
+            <textarea
+              class="form-control mb-4"
+              style="width: 100%"
+              rows="4"
+              required
+            ></textarea>
+            <h5>
+              4 Решение Текущих Проблем: Существует ли у Вас конкретные вопросы 
+              или проблемы, которые Вы хотели бы решить в ближайшее время?
+            </h5>
+            <textarea
+              class="form-control mb-4"
+              style="width: 100%"
+              rows="4"
+              required
+            ></textarea>
+            <h5>
+              5 Есть ли у вас близкие или родные люди, которым также мог бы помочь коучинг в решении их вопросов?
+              Кто эти люди? Какие сложности сейчас у этих людей?  
+            </h5>
+            <textarea
+              class="form-control mb-4"
+              style="width: 100%"
+              rows="4"
+              required
+            ></textarea>
+            <h5>
+              6 Если Вы уже обращались к коучам / наставникам, поделитесь пожалуйста 
+              своим опытом. Что Вам понравилось, а что не удовлетворило Вас?
+            </h5>
+            <textarea
+              class="form-control mb-4"
+              style="width: 100%"
+              rows="4"
+              required
+            ></textarea>
+            <h5>
+              7 Цели и Ожидания:  Скажите, какую конкретную пользу Вы бы хотели 
+              получить от консультации с профессиональным коучем?
+            </h5>
+            <textarea
+              class="form-control mb-4"
+              style="width: 100%"
+              rows="4"
+              required
+            ></textarea>
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-primary mb-4 me-2" id="send">
+                Отправить ответы
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary mb-4"
+                id="fillLater"
+              >
+                Заполнить позже
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+    <script>
+      let tg = window.Telegram.WebApp;
+      let send = document.getElementById("send");
+      let fillLater = document.getElementById("fillLater");
+      tg.expand();
+
+      document
+        .getElementById("mainForm")
+        .addEventListener("submit", (event) => {
+          event.preventDefault(); // Предотвращаем отправку формы
+
+          let form = document.getElementById("mainForm");
+
+          if (form.checkValidity()) {
+            let data = {};
+            let textareas = form.querySelectorAll("textarea");
+            textareas.forEach((textarea, index) => {
+              data[`antwort${index + 1}`] = textarea.value;
+            });
+
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+          } else {
+            form.reportValidity();
+          }
+        });
+      fillLater.addEventListener("click", () => {
+        tg.sendData(JSON.stringify("выход"));
+        tg.close();
+      });
+      // send.addEventListener("click", () => {
+      //   let antwort1 = document
+      //     .getElementById("form1")
+      //     .querySelector("textarea").value;
+      //   let antwort2 = document
+      //     .getElementById("form2")
+      //     .querySelector("textarea").value;
+      //   let antwort3 = document
+      //     .getElementById("form3")
+      //     .querySelector("textarea").value;
+      //   let antwort4 = document
+      //     .getElementById("form4")
+      //     .querySelector("textarea").value;
+      //   let antwort5 = document
+      //     .getElementById("form5")
+      //     .querySelector("textarea").value;
+      //   let antwort6 = document
+      //     .getElementById("form6")
+      //     .querySelector("textarea").value;
+      //   let antwort7 = document
+      //     .getElementById("form7")
+      //     .querySelector("textarea").value;
+
+      //   let data = {
+      //     antwort1: antwort1,
+      //     antwort2: antwort2,
+      //     antwort3: antwort3,
+      //     antwort4: antwort4,
+      //     antwort5: antwort5,
+      //     antwort6: antwort6,
+      //     antwort7: antwort7,
+      //   };
+
+      //   tg.sendData(JSON.stringify(data));
+
+      //   tg.close();
+      // });
+    </script>
+  </body>
+</html>
